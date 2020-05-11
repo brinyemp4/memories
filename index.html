@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memories</title>
+    <style>
+        .memory-wrapper {
+          display: grid;
+          gap: 1rem;
+          grid-template-columns: repeat(auto-fit, 300px);
+        }
+  
+        .memory img {
+          max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- TODO :: Flipbook (3D) on click -->
+    <div class="memory-wrapper"></div>
+    <template id="memory">
+        <div class="memory">
+            <img src="" alt="" />
+            <h2 class="title"></h2>
+            <p class="about-memory"></p>
+        </div>
+    </template>
+
+</body>
+<script type="text/javascript">
+    const apiUrl = `http://localhost:1337`;
+    async function loadMemories() {
+        const memories = await fetch(`${apiUrl}/memories`).then((res) => res.json()).catch((err) => console.log(err));
+        console.log(memories);
+        const template = document.getElementById('memory');
+        const container = document.querySelector('.memory-wrapper');
+
+        memories.forEach((memory) => {
+            const node = template.content.cloneNode(true);
+
+            const img = node.querySelector('img');
+            if (memory.photos.length > 0) {
+                // console.log(memory.photos[0].mediafiles[0].formats.small.url);
+                img.src = `${apiUrl}`+memory.photos[0].mediafiles[0].formats.small.url;
+                img.alt = memory.Title;
+            }            
+
+            node.querySelector('.title').innerText = `${memory.Title}`;
+            node.querySelector('.about-memory').innerText = `${memory.About}`;
+
+            container.appendChild(node);
+        });
+    }
+    loadMemories();
+</script>
+</html>
