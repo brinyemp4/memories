@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/brinyemp4/memories#readme",
   "dependencies": {
-    "flip-book": "^1.9.7",
     "serve": "^11.3.0"
   }
 }

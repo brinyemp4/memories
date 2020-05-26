@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memories</title>
+    <style>
+        .memory-wrapper {
+          display: grid;
+          gap: 1rem;
+          grid-template-columns: repeat(auto-fit, 300px);
+        }
+  
+        .memory img {
+          max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="memory-wrapper"></div>
+    <template id="memory">
+        <div class="memory">
+            <img src="" alt="" title="" />
+        </div>
+    </template>
+</body>
+<script type="text/javascript" src="/js/url-config.js"></script>
+<script type="text/javascript" src="/js/app-utility.js"></script>
+<script type="text/javascript">
+    async function loadAlbum() {
+        slug = getUrlParameter("slug");
+        const album = await fetch(`${apiUrl}/memories?Slug=${slug}`).then((res) => res.json()).catch((err) => console.log(err));
+        console.log(album);
+        if (album.length > 0) {
+            const template = document.getElementById('memory');
+            const container = document.querySelector('.memory-wrapper');
+            if (album[0].photos && album[0].photos.length > 0) {
+                album[0].photos[0].mediafiles.forEach(photo => {
+                    console.log(photo);
+                    const node = template.content.cloneNode(true);
+                    const img = node.querySelector('img');
+                    img.src = `${apiUrl}` + photo.formats.small.url;
+                    img.alt = photo.alternativeText;
+                    img.title = photo.caption;
+                    container.appendChild(node);
+                });
+            }
+        }
+    }
+    loadAlbum();
+</script>
+</html>

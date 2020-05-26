@@ -21,18 +21,21 @@
     <div class="memory-wrapper"></div>
     <template id="memory">
         <div class="memory">
-            <img src="" alt="" />
-            <h2 class="title"></h2>
+            <a class="memory-detail-link" title="">
+                <img src="" alt="" />
+            </a>
+            <a class="memory-detail-link" title="">
+                <h2 class="title"></h2>
+            </a>
             <p class="about-memory"></p>
         </div>
     </template>
-
 </body>
+<script type="text/javascript" src="/js/url-config.js"></script>
 <script type="text/javascript">
-    const apiUrl = `http://localhost:1337`;
     async function loadMemories() {
         const memories = await fetch(`${apiUrl}/memories`).then((res) => res.json()).catch((err) => console.log(err));
-        console.log(memories);
+        // console.log(memories);
         const template = document.getElementById('memory');
         const container = document.querySelector('.memory-wrapper');
 
@@ -42,9 +45,14 @@
             const img = node.querySelector('img');
             if (memory.photos.length > 0) {
                 // console.log(memory.photos[0].mediafiles[0].formats.small.url);
-                img.src = `${apiUrl}`+memory.photos[0].mediafiles[0].formats.small.url;
+                img.src = `${apiUrl}` + memory.photos[0].mediafiles[0].formats.small.url;
                 img.alt = memory.Title;
-            }            
+            }
+
+            node.querySelectorAll('a.memory-detail-link').forEach((detailLinkNode) => {
+                detailLinkNode.href = memoryDetailUrl + `?slug=${memory.Slug}`;
+                detailLinkNode.title = `${memory.Title}`;
+            })
 
             node.querySelector('.title').innerText = `${memory.Title}`;
             node.querySelector('.about-memory').innerText = `${memory.About}`;
